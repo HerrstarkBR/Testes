@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor UserAccountControl</title>
+    <script>
+        let flags = {
+            1: "1: SCRIPT",
+            2: "2: DESABILITADA",
+            8: "8: HOMEDIR_REQUIRED",
+            16: "16: LOCKOUT",
+            32: "32: PASSWD_NOTREQD",
+            64: "64: PASSWD_CANT_CHANGE",
+            128: "128: ENCRYPTED_TEXT_PWD_ALLOWED",
+            256: "256: TEMP_DUPLICATE_ACCOUNT",
+            512: "512: CONTA NORMAL",
+            2048: "2048: INTERDOMAIN_TRUST_ACCOUNT",
+            4096: "4096: WORKSTATION_TRUST_ACCOUNT",
+            8192: "8192: SERVER_TRUST_ACCOUNT",
+            65536: "65536: SENHA NUNCA EXPIRA",
+            131072: "131072: MNS_LOGON_ACCOUNT",
+            262144: "262144: SMARTCARD_REQUIRED",
+            524288: "524288: TRUSTED_FOR_DELEGATION",
+            1048576: "1048576: NOT_DELEGATED",
+            2097152: "2097152: USE_DES_KEY_ONLY",
+            4194304: "4194304: DONT_REQUIRE_PREAUTH",
+            8388608: "8388608: PASSWORD_EXPIRED",
+            16777216: "16777216: TRUSTED_TO_AUTH_FOR_DELEGATION",
+            67108864: "67108864: PARTIAL_SECRETS_ACCOUNT"
+        };
+
+        function converterUAC() {
+            let uacValue = parseInt(document.getElementById("uacInput").value, 10);
+            let resultDiv = document.getElementById("result");
+            
+            let activeFlags = [];
+            for (let flag in flags) {
+                if ((uacValue & flag) == flag) {
+                    activeFlags.push(flags[flag]);
+                }
+            }
+            
+            resultDiv.innerText = "Resultado: " + (activeFlags.length ? activeFlags.join(" e ") : "Nenhuma flag conhecida encontrada");
+        }
+
+        function calcularUAC() {
+            let checkboxes = document.querySelectorAll("input[type=checkbox]:checked");
+            let uacValue = 0;
+            checkboxes.forEach(checkbox => {
+                uacValue += parseInt(checkbox.value);
+            });
+            document.getElementById("uacOutput").innerText = "Valor UserAccountControl: " + uacValue;
+        }
+    </script>
+</head>
+<body>
+    <font face=arial size=3>
+    <h2>Conversor de UserAccountControl</h2>
+    <label for="uacInput">Digite o valor de UserAccountControl:</label>
+    <input type="number" id="uacInput" />
+    <button onclick="converterUAC()">Converter</button>
+    <b><p id="result">Resultado: </p></b>
+    <hr>
+    <h2>Calculadora de UserAccountControl</h2>
+    <p>Selecione os atributos desejados:</p>
+    <div id="checkboxContainer">
+        <script>
+            for (let flag in flags) {
+                document.write(`<input type='checkbox' value='${flag}' onclick='calcularUAC()'> ${flags[flag]}<br>`);
+            }
+        </script>
+    </div>
+    <b><p id="uacOutput">Valor UserAccountControl: </p></b>
+    <hr>
+    <footer>
+        <p>&copy; 2024 - Marcelo Cruz - 35250 - WEG</p>
+    </footer>
+    </font>
+</body>
+</html>
